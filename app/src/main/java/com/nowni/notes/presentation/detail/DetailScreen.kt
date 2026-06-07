@@ -17,19 +17,22 @@ import androidx.compose.ui.Modifier
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DetailScreen(onBackClick: () -> Unit = {}) {
+fun DetailScreen(
+    noteId: Long,
+    onBackClick: () -> Unit = {}
+) {
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text("DetailScreen") }, navigationIcon = {
-                IconButton(onClick = onBackClick) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Back"
-                    )
-                }
-            }, colors = TopAppBarDefaults.topAppBarColors()
+                    IconButton(onClick = onBackClick) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Back"
+                        )
+                    }
+                }, colors = TopAppBarDefaults.topAppBarColors()
             )
         }) { innerPadding ->
         Box(
@@ -37,7 +40,7 @@ fun DetailScreen(onBackClick: () -> Unit = {}) {
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-            Text("Detail Screen")
+            Text("Selected Note Id: $noteId")
         }
     }
 }

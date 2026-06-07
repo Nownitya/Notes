@@ -11,5 +11,6 @@ data object Editor : NavKey
 
 @Serializable
 data class Detail(
-    val noteId: Long) : NavKey
+    val noteId: Long
+) : NavKey
 

@@ -11,6 +11,7 @@ import androidx.navigation3.ui.NavDisplay
 import com.nowni.notes.presentation.detail.DetailScreen
 import com.nowni.notes.presentation.editor.EditorScreen
 import com.nowni.notes.presentation.home.HomeScreen
+import com.nowni.notes.presentation.home.state.HomeUiState
 
 
 @Composable
@@ -20,15 +21,33 @@ fun AppNavGraph() {
     val entryProvider: (NavKey) -> NavEntry<NavKey> = entryProvider {
         entry<Home> {
 
-            HomeScreen()
+            HomeScreen(
+                uiState = HomeUiState(),
+                onAddNote = {
+                    backStack.add(Editor)
+
+                },
+                onNoteClick = { noteId ->
+                    backStack.add(Detail(noteId))
+
+                }
+            )
 
         }
-        entry<Editor>{
-            EditorScreen()
+        entry<Editor> {
+            EditorScreen(
+                onClickBack = {
+                backStack.removeLastOrNull()
+            })
 
         }
-        entry <Detail>{
-            DetailScreen()
+        entry<Detail> {detail ->
+            DetailScreen(
+                noteId = detail.noteId,
+                onBackClick = {
+                    backStack.removeLastOrNull()
+                }
+            )
 
         }
 
@@ -36,7 +55,7 @@ fun AppNavGraph() {
     }
     NavDisplay(
         backStack,
-        onBack = {if (backStack.size>1) backStack.removeLastOrNull()},
+        onBack = { if (backStack.size > 1) backStack.removeLastOrNull() },
         entryProvider = entryProvider,
-        )
+    )
 }
