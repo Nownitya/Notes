@@ -19,17 +19,8 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            Surface(modifier = Modifier.fillMaxSize()) {
-                NotesApp()
-            }
+            NotesApp()
         }
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun NotesAppPreview() {
-    NotesTheme {
-        NotesApp()
-    }
-}
