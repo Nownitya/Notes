@@ -13,6 +13,7 @@ import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
+import com.nowni.notes.domain.model.Note
 import com.nowni.notes.presentation.detail.DetailScreen
 import com.nowni.notes.presentation.detail.state.DetailUiAction
 import com.nowni.notes.presentation.detail.state.DetailUiState
@@ -28,12 +29,14 @@ import com.nowni.notes.presentation.home.state.HomeUiState
 fun AppNavGraph() {
     val backStack: NavBackStack<NavKey> = rememberNavBackStack(Home)
 
+    var notes by remember { mutableStateOf(previewNotes) }
+
     val entryProvider: (NavKey) -> NavEntry<NavKey> = entryProvider {
         entry<Home> {
 
             HomeScreen(
                 uiState = HomeUiState(
-                    notes = previewNotes
+                    notes = notes
                 ),
                 onAddNote = {
                     backStack.add(Editor)
@@ -67,6 +70,17 @@ fun AppNavGraph() {
                         }
 
                         EditorUiAction.SaveNote -> {
+                            if (uiState.title.isBlank()) return@EditorScreen
+
+                            val newNote = Note(
+                                id = (notes.maxOfOrNull { it.id }?: 0L)+1,
+                                title = uiState.title,
+                                content = uiState.content
+                            )
+                            notes = listOf(newNote)+notes
+                            backStack.removeLastOrNull()
+
+
                             // PlaceHolder
                         }
 

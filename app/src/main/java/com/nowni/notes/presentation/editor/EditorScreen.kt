@@ -91,8 +91,10 @@ fun EditorScreen(
             Spacer(modifier = Modifier.height(50.dp))
 
             Button(
+                enabled = uiState.title.isBlank(),
                 onClick = { onAction(EditorUiAction.SaveNote) },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+
             ) {
                 Text("Save")
             }
