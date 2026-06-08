@@ -1,7 +1,6 @@
 package com.nowni.notes.presentation.home
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -18,7 +17,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.nowni.notes.domain.model.Note
@@ -29,7 +27,9 @@ import com.nowni.notes.ui.theme.NotesTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
-    uiState: HomeUiState, onAddNote: () -> Unit = {}, onNoteClick: (Long) -> Unit = {}
+    uiState: HomeUiState,
+    onAddNote: () -> Unit = {},
+    onNoteClick: (Long) -> Unit = {}
 ) {
     Scaffold(topBar = {
         TopAppBar(
@@ -58,17 +58,15 @@ fun HomeScreen(
                 NoteCard(
                     note = note,
                     onclick = {
-                        onNoteClick(it.id) })
+                        onNoteClick(it.id)
+                    })
             }
         }
-
-
     }
-
 
 }
 
-private val previewNotes = listOf(
+val previewNotes = listOf(
     Note(
         id = 1, title = "Shopping List", content = "Buy milk, eggs and bread"
     ), Note(
@@ -119,7 +117,9 @@ private val previewNotes = listOf(
 private fun HomeScreenPreview() {
     NotesTheme {
         HomeScreen(
-            uiState = HomeUiState(notes = previewNotes), onNoteClick = {})
+            uiState = HomeUiState(notes = previewNotes),
+            onAddNote = {},
+            onNoteClick = {}
+        )
     }
-
 }

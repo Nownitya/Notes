@@ -2,6 +2,10 @@ package com.nowni.notes.presentation.navigation
 
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.NavKey
@@ -10,7 +14,10 @@ import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
 import com.nowni.notes.presentation.detail.DetailScreen
 import com.nowni.notes.presentation.editor.EditorScreen
+import com.nowni.notes.presentation.editor.state.EditorUiAction
+import com.nowni.notes.presentation.editor.state.EditorUiState
 import com.nowni.notes.presentation.home.HomeScreen
+import com.nowni.notes.presentation.home.previewNotes
 import com.nowni.notes.presentation.home.state.HomeUiState
 
 
@@ -22,7 +29,9 @@ fun AppNavGraph() {
         entry<Home> {
 
             HomeScreen(
-                uiState = HomeUiState(),
+                uiState = HomeUiState(
+                    notes = previewNotes
+                ),
                 onAddNote = {
                     backStack.add(Editor)
 
@@ -35,13 +44,35 @@ fun AppNavGraph() {
 
         }
         entry<Editor> {
+
+            var uiState by remember { mutableStateOf(EditorUiState()) }
             EditorScreen(
-                onClickBack = {
-                backStack.removeLastOrNull()
-            })
+
+                uiState = uiState,
+                onAction = { action ->
+                    when (action) {
+                        is EditorUiAction.TitleChange -> {
+                            uiState = uiState.copy(
+                                title = action.title
+                            )
+                        }
+
+                        is EditorUiAction.ContentChange -> {
+                            uiState = uiState.copy(
+                                content = action.content
+                            )
+                        }
+                        EditorUiAction.SaveNote -> {
+                            // PlaceHolder
+                        }
+
+                        EditorUiAction.NavigateBack -> backStack.removeLastOrNull()
+                    }
+                },
+                )
 
         }
-        entry<Detail> {detail ->
+        entry<Detail> { detail ->
             DetailScreen(
                 noteId = detail.noteId,
                 onBackClick = {
