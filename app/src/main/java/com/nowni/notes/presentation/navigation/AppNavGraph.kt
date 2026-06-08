@@ -1,6 +1,7 @@
 package com.nowni.notes.presentation.navigation
 
 
+import android.R.attr.action
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -13,6 +14,8 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
 import com.nowni.notes.presentation.detail.DetailScreen
+import com.nowni.notes.presentation.detail.state.DetailUiAction
+import com.nowni.notes.presentation.detail.state.DetailUiState
 import com.nowni.notes.presentation.editor.EditorScreen
 import com.nowni.notes.presentation.editor.state.EditorUiAction
 import com.nowni.notes.presentation.editor.state.EditorUiState
@@ -62,6 +65,7 @@ fun AppNavGraph() {
                                 content = action.content
                             )
                         }
+
                         EditorUiAction.SaveNote -> {
                             // PlaceHolder
                         }
@@ -69,14 +73,26 @@ fun AppNavGraph() {
                         EditorUiAction.NavigateBack -> backStack.removeLastOrNull()
                     }
                 },
-                )
+            )
 
         }
         entry<Detail> { detail ->
             DetailScreen(
-                noteId = detail.noteId,
-                onBackClick = {
-                    backStack.removeLastOrNull()
+                uiState = DetailUiState(
+                    noteId = detail.noteId,
+                    title = "Note ${detail.noteId}",
+                    content = "Sample Content"
+                ),
+                onAction = { action ->
+                    when (action) {
+                        DetailUiAction.NavigateBack -> {
+                            backStack.removeLastOrNull()
+                        }
+
+                        DetailUiAction.EditNote -> {
+                        }
+                    }
+
                 }
             )
 
