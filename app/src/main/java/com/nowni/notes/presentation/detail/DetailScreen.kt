@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Note
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.EditNote
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -23,6 +24,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.key.Key.Companion.Delete
 import androidx.compose.ui.unit.dp
 import com.nowni.notes.presentation.detail.state.DetailUiAction
 import com.nowni.notes.presentation.detail.state.DetailUiState
@@ -30,7 +32,8 @@ import com.nowni.notes.presentation.detail.state.DetailUiState
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailScreen(
-    uiState: DetailUiState, onAction: (DetailUiAction) -> Unit
+    uiState: DetailUiState,
+    onAction: (DetailUiAction) -> Unit
 ) {
 
     Scaffold(
@@ -51,9 +54,17 @@ fun DetailScreen(
                             onAction(DetailUiAction.EditNote)
                         }) {
                         Icon(
-                            imageVector = Icons.Default.EditNote, contentDescription = "Edit Note"
+                            imageVector = Icons.Default.EditNote,
+                            contentDescription = "Edit Note"
                         )
 
+                    }
+                    IconButton(onClick = {
+                        onAction(DetailUiAction.DeleteNote)
+
+                    }) {
+                        Icon(imageVector = Icons.Default.Delete,
+                            contentDescription = "Delete")
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors()

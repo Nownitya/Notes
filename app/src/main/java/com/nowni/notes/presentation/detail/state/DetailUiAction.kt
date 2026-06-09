@@ -5,4 +5,6 @@ sealed interface DetailUiAction {
     data object NavigateBack : DetailUiAction
 
     data object EditNote : DetailUiAction
+
+    data object DeleteNote: DetailUiAction
 }

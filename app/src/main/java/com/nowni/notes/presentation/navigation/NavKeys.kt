@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 data object Home : NavKey
 
 @Serializable
-data object Editor : NavKey
+data class Editor(val noteId:Long? = null) : NavKey
 
 @Serializable
 data class Detail(

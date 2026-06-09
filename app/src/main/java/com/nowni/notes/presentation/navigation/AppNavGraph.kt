@@ -1,7 +1,6 @@
 package com.nowni.notes.presentation.navigation
 
 
-import android.R.attr.action
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -39,7 +38,7 @@ fun AppNavGraph() {
                     notes = notes
                 ),
                 onAddNote = {
-                    backStack.add(Editor)
+                    backStack.add(Editor())
 
                 },
                 onNoteClick = { noteId ->
@@ -49,9 +48,19 @@ fun AppNavGraph() {
             )
 
         }
-        entry<Editor> {
+        entry<Editor> { editor ->
 
-            var uiState by remember { mutableStateOf(EditorUiState()) }
+            val existingNote = notes.firstOrNull {
+                it.id == editor.noteId
+            }
+            var uiState by remember(editor.noteId) {
+                mutableStateOf(
+                    EditorUiState(
+                        title = existingNote?.title.orEmpty(),
+                        content = existingNote?.content.orEmpty()
+                    )
+                )
+            }
             EditorScreen(
 
                 uiState = uiState,
@@ -72,12 +81,25 @@ fun AppNavGraph() {
                         EditorUiAction.SaveNote -> {
                             if (uiState.title.isBlank()) return@EditorScreen
 
-                            val newNote = Note(
-                                id = (notes.maxOfOrNull { it.id }?: 0L)+1,
-                                title = uiState.title,
-                                content = uiState.content
-                            )
-                            notes = listOf(newNote)+notes
+                            if (editor.noteId == null) {
+                                val newNote = Note(
+                                    id = (notes.maxOfOrNull { it.id } ?: 0L) + 1,
+                                    title = uiState.title,
+                                    content = uiState.content
+                                )
+                                notes = listOf(newNote) + notes
+                            } else {
+                                notes = notes.map { note ->
+                                    if (note.id == editor.noteId) {
+                                        note.copy(
+                                            title = uiState.title,
+                                            content = uiState.content
+                                        )
+                                    } else {
+                                        note
+                                    }
+                                }
+                            }
                             backStack.removeLastOrNull()
 
 
@@ -91,11 +113,15 @@ fun AppNavGraph() {
 
         }
         entry<Detail> { detail ->
+
+            val note = notes.firstOrNull{
+                it.id == detail.noteId
+            }
             DetailScreen(
                 uiState = DetailUiState(
                     noteId = detail.noteId,
-                    title = "Note ${detail.noteId}",
-                    content = "Sample Content"
+                    title = note?.title.orEmpty(),
+                    content = note?.content.orEmpty()
                 ),
                 onAction = { action ->
                     when (action) {
@@ -104,6 +130,13 @@ fun AppNavGraph() {
                         }
 
                         DetailUiAction.EditNote -> {
+                            backStack.add(Editor(detail.noteId))
+                        }
+                        DetailUiAction.DeleteNote->{
+                            notes= notes.filterNot {
+                                it.id== detail.noteId
+                            }
+                            backStack.removeLastOrNull()
                         }
                     }
 
