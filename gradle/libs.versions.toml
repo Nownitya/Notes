@@ -21,6 +21,13 @@ lifecycleNav3 = "2.10.0"
 # Serializtion
 kotlinxSerializarion ="1.11.0"
 
+# Room
+room = "2.8.4"
+
+# Hilt
+daggerHilt = "2.59.2"
+hiltNavigationCompose = "1.3.0"
+
 # Testing
 junit = "4.13.2"
 junitVersion = "1.3.0"
@@ -64,7 +71,17 @@ androidx-material3-adaptive-navigation3={group="androidx.compose.material3.adapt
 
 # Kotlin Serialization
 kotlinx-serialization-core = {module ="org.jetbrains.kotlinx:kotlinx-serialization-core", version.ref="kotlinxSerializarion"}
-#kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerializarionCore" }
+
+# Room
+androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
+androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+
+# Hilt
+hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "daggerHilt" }
+hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "daggerHilt" }
+androidx-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
+
 
 # Testing
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -79,4 +96,6 @@ android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 jetbrains-kotlin-serialization = {id="org.jetbrains.kotlin.plugin.serialization",version.ref="kotlin"}
 google-devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+androidx-room ={ id = "androidx.room", version.ref= "room"}
+google-dagger-hilt = { id = "com.google.dagger.hilt.android", version.ref = "daggerHilt" }
 
