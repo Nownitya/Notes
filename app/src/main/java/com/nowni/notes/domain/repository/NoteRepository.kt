@@ -3,7 +3,7 @@ package com.nowni.notes.domain.repository
 import com.nowni.notes.domain.model.Note
 import kotlinx.coroutines.flow.Flow
 
-interface NotesRepository {
+interface NoteRepository {
 
     fun getNotes(): Flow<List<Note>>
 

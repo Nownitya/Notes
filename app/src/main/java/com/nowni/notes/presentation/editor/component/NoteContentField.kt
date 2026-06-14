@@ -2,7 +2,6 @@ package com.nowni.notes.presentation.editor.component
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
@@ -12,7 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
-import com.nowni.notes.ui.theme.NotesTheme
+import com.nowni.notes.core.ui.theme.NotesTheme
 
 @Composable
 fun NoteContentField(

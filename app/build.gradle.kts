@@ -3,8 +3,9 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.jetbrains.kotlin.serialization)
     alias(libs.plugins.google.devtools.ksp)
-    alias(libs.plugins.google.dagger.hilt)
     alias(libs.plugins.androidx.room)
+//    alias(libs.plugins.google.dagger.hilt)
+
 
 }
 
@@ -52,10 +53,10 @@ room {
     schemaDirectory("$projectDir/schemas")
 }
 
-ksp{
+/*ksp{
     arg("dagger.fastInt","enabled")
     arg("dagger.hilt.android.internal.disableAndroidSuperclassValidatin","true")
-}
+}*/
 
 dependencies {
     //  Androidx Core
@@ -96,9 +97,9 @@ dependencies {
     ksp(libs.androidx.room.compiler)
 
     // Hilt
-    implementation(libs.hilt.android)
-    ksp(libs.hilt.compiler)
-    implementation(libs.androidx.hilt.navigation.compose)
+//    implementation(libs.hilt.android)
+//    ksp(libs.hilt.compiler)
+//    implementation(libs.androidx.hilt.navigation.compose)
 
     // Unit Testing
     testImplementation(libs.junit)

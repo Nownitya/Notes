@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 import com.nowni.notes.domain.model.Note
 import com.nowni.notes.presentation.home.component.NoteCard
 import com.nowni.notes.presentation.home.state.HomeUiState
-import com.nowni.notes.ui.theme.NotesTheme
+import com.nowni.notes.core.ui.theme.NotesTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

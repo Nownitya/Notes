@@ -4,12 +4,12 @@ import com.nowni.notes.data.local.dao.NoteDao
 import com.nowni.notes.data.mapper.toEntity
 import com.nowni.notes.data.mapper.toNote
 import com.nowni.notes.domain.model.Note
-import com.nowni.notes.domain.repository.NotesRepository
+import com.nowni.notes.domain.repository.NoteRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 
-class NotesRepositoryImpl(private val noteDao: NoteDao) : NotesRepository {
+class NoteRepositoryImpl(private val noteDao: NoteDao) : NoteRepository {
     override fun getNotes(): Flow<List<Note>> {
         return noteDao.getNotes().map { entities ->
             entities.map { entity ->

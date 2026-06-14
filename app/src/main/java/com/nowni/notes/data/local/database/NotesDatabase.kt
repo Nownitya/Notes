@@ -6,7 +6,7 @@ import com.nowni.notes.data.local.dao.NoteDao
 import com.nowni.notes.data.local.entity.NoteEntity
 
 @Database(entities = [NoteEntity::class], version = 1, exportSchema = true)
-abstract class NoteDatabase : RoomDatabase() {
+abstract class NotesDatabase : RoomDatabase() {
 
     abstract fun noteDao(): NoteDao
 
