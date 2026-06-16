@@ -2,4 +2,8 @@ package com.nowni.notes.presentation.home.state
 
 import com.nowni.notes.domain.model.Note
 
-data class HomeUiState(val notes: List<Note> = emptyList())
+data class HomeUiState(
+    val notes: List<Note> = emptyList(),
+    val isLoading: Boolean = false,
+    val isError: String? = null
+)
