@@ -23,8 +23,8 @@ class HomeViewModel(
     private fun observeNotes() {
         viewModelScope.launch {
             getNotesUseCase().collect { notes ->
-                _uiState.update {
-                    it.copy(
+                _uiState.update { currentState ->
+                    currentState.copy(
                         notes = notes,
                         isLoading = false
                     )

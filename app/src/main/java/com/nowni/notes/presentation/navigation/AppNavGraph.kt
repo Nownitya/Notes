@@ -13,18 +13,17 @@ import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
-import com.nowni.notes.core.database.UseCaseProvider
+import com.nowni.notes.core.factory.DetailViewModelFactoryProvider
+import com.nowni.notes.core.factory.EditorViewModelFactoryProvider
+import com.nowni.notes.core.factory.HomeViewModelFactoryProvider
 import com.nowni.notes.presentation.detail.DetailScreen
 import com.nowni.notes.presentation.detail.DetailViewModel
-import com.nowni.notes.presentation.detail.DetailViewModelFactory
 import com.nowni.notes.presentation.detail.state.DetailUiAction
 import com.nowni.notes.presentation.editor.EditorScreen
 import com.nowni.notes.presentation.editor.EditorViewModel
-import com.nowni.notes.presentation.editor.EditorViewModelFactory
 import com.nowni.notes.presentation.editor.state.EditorUiAction
 import com.nowni.notes.presentation.home.HomeScreen
 import com.nowni.notes.presentation.home.HomeViewModel
-import com.nowni.notes.presentation.home.HomeViewModelFactory
 
 
 @Composable
@@ -39,9 +38,7 @@ fun AppNavGraph() {
             val context = LocalContext.current
 
             val viewModel: HomeViewModel = viewModel(
-                factory = HomeViewModelFactory(
-                    getNotesUseCase = UseCaseProvider.provideNotesUseCase(context).getNotes
-                )
+                factory = HomeViewModelFactoryProvider.provide(context)
             )
 
             val uiState by viewModel.uiState.collectAsState()
@@ -55,14 +52,8 @@ fun AppNavGraph() {
 
         entry<Editor> { editor ->
             val context = LocalContext.current
-            val useCases = UseCaseProvider.provideNotesUseCase(context)
-
             val viewModel: EditorViewModel = viewModel(
-                factory = EditorViewModelFactory(
-                    addNoteUseCase = useCases.addNote,
-                    updateNoteUseCase = useCases.updateNote,
-                    getNoteByIdUseCase = useCases.getNotesById
-                )
+                factory = EditorViewModelFactoryProvider.provide(context),
             )
 
             val uiState by viewModel.uiState.collectAsState()
@@ -82,27 +73,21 @@ fun AppNavGraph() {
 
                         EditorUiAction.SaveNote -> {
                             viewModel.saveNote(editor.noteId)
+                            backStack.removeLastOrNull()
                         }
-
                         else -> {
                             viewModel.onAction(action)
                         }
                     }
-
-                })
-
+                }
+            )
         }
         entry<Detail> { detail ->
 
             val context = LocalContext.current
 
-            val useCases = UseCaseProvider.provideNotesUseCase(context)
-
             val viewModel: DetailViewModel = viewModel(
-                factory = DetailViewModelFactory(
-                    getNoteByIdUseCase = useCases.getNotesById,
-                    deleteNoteUseCase = useCases.deleteNote
-                )
+                factory = DetailViewModelFactoryProvider.provide(context),
             )
 
             val uiState by viewModel.uiState.collectAsState()
@@ -119,9 +104,7 @@ fun AppNavGraph() {
                         }
 
                         DetailUiAction.EditNote -> {
-                            backStack.add(
-                                Editor(detail.noteId)
-                            )
+                            backStack.add(Editor(detail.noteId))
                         }
 
                         DetailUiAction.DeleteNote -> {
@@ -129,11 +112,11 @@ fun AppNavGraph() {
                             backStack.removeLastOrNull()
                         }
                     }
-                })
+                }
+            )
         }
-
-
     }
+
     NavDisplay(
         backStack,
         onBack = { if (backStack.size > 1) backStack.removeLastOrNull() },
