@@ -40,9 +40,7 @@ fun AppNavGraph() {
 
             val viewModel: HomeViewModel = viewModel(
                 factory = HomeViewModelFactory(
-                    getNotesUseCase = UseCaseProvider
-                        .provideNotesUseCase(context)
-                        .getNotes
+                    getNotesUseCase = UseCaseProvider.provideNotesUseCase(context).getNotes
                 )
             )
 
@@ -110,14 +108,11 @@ fun AppNavGraph() {
             val uiState by viewModel.uiState.collectAsState()
 
             LaunchedEffect(detail.noteId) {
-                detail.noteId?.let {
-                    viewModel.loadNote(it)
-                }
+                viewModel.loadNote(detail.noteId)
             }
 
             DetailScreen(
-                uiState = uiState,
-                onAction = { action ->
+                uiState = uiState, onAction = { action ->
                     when (action) {
                         DetailUiAction.NavigateBack -> {
                             backStack.removeLastOrNull()
@@ -129,7 +124,7 @@ fun AppNavGraph() {
                             )
                         }
 
-                        DetailUiAction.DeleteNote ->{
+                        DetailUiAction.DeleteNote -> {
                             viewModel.deleteNote()
                             backStack.removeLastOrNull()
                         }
