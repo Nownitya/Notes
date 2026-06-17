@@ -2,6 +2,7 @@ package com.nowni.notes.presentation.navigation
 
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -16,13 +17,13 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
 import com.nowni.notes.core.database.UseCaseProvider
-import com.nowni.notes.domain.model.Note
 import com.nowni.notes.presentation.detail.DetailScreen
 import com.nowni.notes.presentation.detail.state.DetailUiAction
 import com.nowni.notes.presentation.detail.state.DetailUiState
 import com.nowni.notes.presentation.editor.EditorScreen
+import com.nowni.notes.presentation.editor.EditorViewModel
+import com.nowni.notes.presentation.editor.EditorViewModelFactory
 import com.nowni.notes.presentation.editor.state.EditorUiAction
-import com.nowni.notes.presentation.editor.state.EditorUiState
 import com.nowni.notes.presentation.home.HomeScreen
 import com.nowni.notes.presentation.home.HomeViewModel
 import com.nowni.notes.presentation.home.HomeViewModelFactory
@@ -38,7 +39,7 @@ fun AppNavGraph() {
     val entryProvider: (NavKey) -> NavEntry<NavKey> = entryProvider {
         entry<Home> {
 
-            val context= LocalContext.current
+            val context = LocalContext.current
             val viewModel: HomeViewModel = viewModel(
                 factory = HomeViewModelFactory(
                     getNotesUseCase = UseCaseProvider.provideNotesUseCase(context).getNotes
@@ -59,20 +60,44 @@ fun AppNavGraph() {
         }
 
         entry<Editor> { editor ->
+            val context = LocalContext.current
+            val usecases = UseCaseProvider.provideNotesUseCase(context)
 
-            val existingNote = notes.firstOrNull {
-                it.id == editor.noteId
-            }
-            var uiState by remember(editor.noteId) {
-                mutableStateOf(
-                    EditorUiState(
-                        title = existingNote?.title.orEmpty(),
-                        content = existingNote?.content.orEmpty()
-                    )
+            val viewModel: EditorViewModel = viewModel(
+                factory = EditorViewModelFactory(
+                    addNoteUseCase = usecases.addNote,
+                    updateNoteUseCase = usecases.updateNote,
+                    getNoteByIdUseCase = usecases.getNotesById
                 )
-            }
-            EditorScreen(
+            )
 
+            val uiState by viewModel.uiState.collectAsState()
+
+            LaunchedEffect(editor.noteId) {
+                editor.noteId?.let {
+                    viewModel.loadNote(it)
+                }
+            }
+
+            EditorScreen(
+                uiState = uiState,
+                onAction = { action ->
+                    when (action) {
+                        EditorUiAction.NavigateBack -> {
+                            backStack.removeLastOrNull()
+                        }
+
+                        EditorUiAction.SaveNote -> {
+                            viewModel.saveNote(editor.noteId)
+                        }
+                        else -> {
+                            viewModel.onAction(action)
+                        }
+                    }
+
+                })
+
+            /*EditorScreen(
                 uiState = uiState,
                 onAction = { action ->
                     when (action) {
@@ -119,12 +144,12 @@ fun AppNavGraph() {
                         EditorUiAction.NavigateBack -> backStack.removeLastOrNull()
                     }
                 },
-            )
+            )*/
 
         }
         entry<Detail> { detail ->
 
-            val note = notes.firstOrNull{
+            val note = notes.firstOrNull {
                 it.id == detail.noteId
             }
             DetailScreen(
@@ -142,9 +167,10 @@ fun AppNavGraph() {
                         DetailUiAction.EditNote -> {
                             backStack.add(Editor(detail.noteId))
                         }
-                        DetailUiAction.DeleteNote->{
-                            notes= notes.filterNot {
-                                it.id== detail.noteId
+
+                        DetailUiAction.DeleteNote -> {
+                            notes = notes.filterNot {
+                                it.id == detail.noteId
                             }
                             backStack.removeLastOrNull()
                         }
