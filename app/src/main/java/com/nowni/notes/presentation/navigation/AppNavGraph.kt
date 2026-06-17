@@ -2,16 +2,20 @@ package com.nowni.notes.presentation.navigation
 
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
+import com.nowni.notes.core.database.UseCaseProvider
 import com.nowni.notes.domain.model.Note
 import com.nowni.notes.presentation.detail.DetailScreen
 import com.nowni.notes.presentation.detail.state.DetailUiAction
@@ -20,8 +24,9 @@ import com.nowni.notes.presentation.editor.EditorScreen
 import com.nowni.notes.presentation.editor.state.EditorUiAction
 import com.nowni.notes.presentation.editor.state.EditorUiState
 import com.nowni.notes.presentation.home.HomeScreen
+import com.nowni.notes.presentation.home.HomeViewModel
+import com.nowni.notes.presentation.home.HomeViewModelFactory
 import com.nowni.notes.presentation.home.previewNotes
-import com.nowni.notes.presentation.home.state.HomeUiState
 
 
 @Composable
@@ -33,21 +38,26 @@ fun AppNavGraph() {
     val entryProvider: (NavKey) -> NavEntry<NavKey> = entryProvider {
         entry<Home> {
 
+            val context= LocalContext.current
+            val viewModel: HomeViewModel = viewModel(
+                factory = HomeViewModelFactory(
+                    getNotesUseCase = UseCaseProvider.provideNotesUseCase(context).getNotes
+                )
+            )
+
+            val uiState by viewModel.uiState.collectAsState()
+
             HomeScreen(
-                uiState = HomeUiState(
-                    notes = notes
-                ),
+                uiState = uiState,
                 onAddNote = {
                     backStack.add(Editor())
-
                 },
                 onNoteClick = { noteId ->
                     backStack.add(Detail(noteId))
-
                 }
             )
-
         }
+
         entry<Editor> { editor ->
 
             val existingNote = notes.firstOrNull {
