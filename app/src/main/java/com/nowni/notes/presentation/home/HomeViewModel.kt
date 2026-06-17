@@ -16,36 +16,20 @@ class HomeViewModel(
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
 
-    init{
-        loadNotes()
+    init {
+        observeNotes()
     }
 
-    private fun loadNotes() {
+    private fun observeNotes() {
         viewModelScope.launch {
-            getNotesUseCase()
-                .collect { notes ->
-                    _uiState.update {
-                        it.copy(
-                            notes = notes
-                        )
-                    }
+            getNotesUseCase().collect { notes ->
+                _uiState.update {
+                    it.copy(
+                        notes = notes,
+                        isLoading = false
+                    )
                 }
-
+            }
         }
     }
-
-
-
-    /*
-
-    init {
-        getNotes()
-    }
-
-    private fun getNotes() {
-        getNotesUseCase()
-            .onEach { notes ->
-                _uiState.update { it.copy(notes = notes) }
-            }.launchIn(viewModelScope)
-    }*/
 }
