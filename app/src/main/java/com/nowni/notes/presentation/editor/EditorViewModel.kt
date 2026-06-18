@@ -8,13 +8,16 @@ import com.nowni.notes.domain.usecase.note.GetNoteByIdUseCase
 import com.nowni.notes.domain.usecase.note.UpdateNoteUseCase
 import com.nowni.notes.presentation.editor.state.EditorUiAction
 import com.nowni.notes.presentation.editor.state.EditorUiState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class EditorViewModel(
+@HiltViewModel
+class EditorViewModel @Inject constructor(
     private val addNoteUseCase: AddNoteUseCase,
     private val updateNoteUseCase: UpdateNoteUseCase,
     private val getNoteByIdUseCase: GetNoteByIdUseCase,

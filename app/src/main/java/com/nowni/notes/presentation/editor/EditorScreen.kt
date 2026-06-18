@@ -5,7 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -26,11 +26,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.nowni.notes.core.ui.theme.NotesTheme
 import com.nowni.notes.presentation.editor.component.NoteContentField
 import com.nowni.notes.presentation.editor.component.NoteTitleField
 import com.nowni.notes.presentation.editor.state.EditorUiAction
 import com.nowni.notes.presentation.editor.state.EditorUiState
-import com.nowni.notes.core.ui.theme.NotesTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -70,20 +70,22 @@ fun EditorScreen(
                 title = uiState.title,
                 onTitleChange = {
                     onAction(EditorUiAction.TitleChange(it))
-                }
+                },
+                modifier = Modifier.fillMaxWidth()
             )
             NoteContentField(
                 content = uiState.content,
                 onContentChange = {
                     onAction(EditorUiAction.ContentChange(it))
                 },
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.heightIn(min = 200.dp, max = 300.dp)
+                    .fillMaxWidth()
             )
 
-            Spacer(modifier = Modifier.height(50.dp))
+            Spacer(modifier = Modifier.weight(1f))
 
             Button(
-                enabled = uiState.title.isBlank(),
+                enabled = uiState.title.isNotBlank(),
                 onClick = { onAction(EditorUiAction.SaveNote) },
                 modifier = Modifier.fillMaxWidth(),
 

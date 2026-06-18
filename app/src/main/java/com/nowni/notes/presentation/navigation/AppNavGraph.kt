@@ -5,17 +5,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
-import com.nowni.notes.core.factory.DetailViewModelFactoryProvider
-import com.nowni.notes.core.factory.EditorViewModelFactoryProvider
-import com.nowni.notes.core.factory.HomeViewModelFactoryProvider
 import com.nowni.notes.presentation.detail.DetailScreen
 import com.nowni.notes.presentation.detail.DetailViewModel
 import com.nowni.notes.presentation.detail.state.DetailUiAction
@@ -35,12 +31,7 @@ fun AppNavGraph() {
     val entryProvider: (NavKey) -> NavEntry<NavKey> = entryProvider {
         entry<Home> {
 
-            val context = LocalContext.current
-
-            val viewModel: HomeViewModel = viewModel(
-                factory = HomeViewModelFactoryProvider.provide(context)
-            )
-
+            val viewModel : HomeViewModel = hiltViewModel()
             val uiState by viewModel.uiState.collectAsState()
 
             HomeScreen(uiState = uiState, onAddNote = {
@@ -51,11 +42,8 @@ fun AppNavGraph() {
         }
 
         entry<Editor> { editor ->
-            val context = LocalContext.current
-            val viewModel: EditorViewModel = viewModel(
-                factory = EditorViewModelFactoryProvider.provide(context),
-            )
 
+            val viewModel: EditorViewModel = hiltViewModel()
             val uiState by viewModel.uiState.collectAsState()
 
             LaunchedEffect(editor.noteId) {
@@ -84,12 +72,7 @@ fun AppNavGraph() {
         }
         entry<Detail> { detail ->
 
-            val context = LocalContext.current
-
-            val viewModel: DetailViewModel = viewModel(
-                factory = DetailViewModelFactoryProvider.provide(context),
-            )
-
+            val viewModel: DetailViewModel = hiltViewModel()
             val uiState by viewModel.uiState.collectAsState()
 
             LaunchedEffect(detail.noteId) {

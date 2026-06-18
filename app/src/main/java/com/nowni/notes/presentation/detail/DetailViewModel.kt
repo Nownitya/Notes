@@ -5,12 +5,15 @@ import androidx.lifecycle.viewModelScope
 import com.nowni.notes.domain.usecase.note.DeleteNoteUseCase
 import com.nowni.notes.domain.usecase.note.GetNoteByIdUseCase
 import com.nowni.notes.presentation.detail.state.DetailUiState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class DetailViewModel(
+@HiltViewModel
+class DetailViewModel @Inject constructor(
     private val getNoteByIdUseCase: GetNoteByIdUseCase,
     private val deleteNoteUseCase: DeleteNoteUseCase
 ) : ViewModel() {
@@ -40,7 +43,8 @@ class DetailViewModel(
             val note = getNoteByIdUseCase(noteId) ?: return@launch
 
             deleteNoteUseCase(note)
-        }
+//            _uiState.value = _uiState.value.copy(isDeleted = true)
+            }
     }
 
 }

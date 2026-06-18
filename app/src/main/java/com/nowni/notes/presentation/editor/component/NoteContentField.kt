@@ -24,6 +24,7 @@ fun NoteContentField(
         onValueChange = onContentChange,
         modifier = modifier.fillMaxSize(),
         placeholder = { Text("Content") },
+        singleLine = false,
         textStyle = MaterialTheme.typography.bodyLarge,
         colors = TextFieldDefaults.colors(
 //            focusedContainerColor = Color.Transparent,

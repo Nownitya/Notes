@@ -1,6 +1,8 @@
 package com.nowni.notes.domain.usecase.note
 
-data class NotesUseCases(
+import javax.inject.Inject
+
+data class NotesUseCases @Inject constructor(
     val getNotes: GetNotesUseCase,
     val getNotesById: GetNoteByIdUseCase,
     val addNote: AddNoteUseCase,

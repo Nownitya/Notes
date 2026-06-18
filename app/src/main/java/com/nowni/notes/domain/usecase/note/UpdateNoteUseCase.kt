@@ -2,8 +2,9 @@ package com.nowni.notes.domain.usecase.note
 
 import com.nowni.notes.domain.model.Note
 import com.nowni.notes.domain.repository.NoteRepository
+import javax.inject.Inject
 
-class UpdateNoteUseCase(
+class UpdateNoteUseCase @Inject constructor(
     private val repository: NoteRepository
 ) {
     suspend operator fun invoke(note: Note) {
