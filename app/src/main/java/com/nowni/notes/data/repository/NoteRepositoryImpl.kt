@@ -33,4 +33,11 @@ class NoteRepositoryImpl(private val noteDao: NoteDao) : NoteRepository {
     override suspend fun deleteNote(note: Note) {
         noteDao.deleteNote(note.toEntity())
     }
+
+    override fun searchNotes(query: String): Flow<List<Note>> {
+        return noteDao.searchNotes(query)
+            .map { entities ->
+                entities.map { it.toNote() }
+            }
+    }
 }

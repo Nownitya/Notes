@@ -33,4 +33,14 @@ interface NoteDao {
     suspend fun deleteNote(
         note: NoteEntity
     )
+
+    @Query(
+        """SELECT * FROM notes WHERE title LIKE '%' 
+            || :query 
+            || '%' or content LIKE '%' 
+            || :query 
+            || '%' ORDER BY id DESC"""
+    )
+    fun searchNotes(query: String): Flow<List<NoteEntity>>
+
 }

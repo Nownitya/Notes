@@ -15,4 +15,6 @@ interface NoteRepository {
 
     suspend fun deleteNote(note: Note)
 
+    fun searchNotes(query: String):Flow<List<Note >>
+
 }
