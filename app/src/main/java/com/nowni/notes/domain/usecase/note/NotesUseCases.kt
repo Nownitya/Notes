@@ -7,5 +7,6 @@ data class NotesUseCases @Inject constructor(
     val getNotesById: GetNoteByIdUseCase,
     val addNote: AddNoteUseCase,
     val updateNote: UpdateNoteUseCase,
-    val deleteNote: DeleteNoteUseCase
+    val deleteNote: DeleteNoteUseCase,
+    val searchNotes: SearchNotesUseCase
 )

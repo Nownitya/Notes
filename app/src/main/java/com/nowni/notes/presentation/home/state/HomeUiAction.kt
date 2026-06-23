@@ -12,5 +12,9 @@ sealed interface HomeUiAction {
         val noteId: Long
     ) : HomeUiAction
 
-    data object RefreshNotes : HomeUiAction
+    data class SearchQueryChanged(
+        val query: String
+    ) : HomeUiAction
+
+//    data object RefreshNotes : HomeUiAction
 }

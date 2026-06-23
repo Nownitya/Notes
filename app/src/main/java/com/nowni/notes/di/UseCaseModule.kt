@@ -6,6 +6,7 @@ import com.nowni.notes.domain.usecase.note.DeleteNoteUseCase
 import com.nowni.notes.domain.usecase.note.GetNoteByIdUseCase
 import com.nowni.notes.domain.usecase.note.GetNotesUseCase
 import com.nowni.notes.domain.usecase.note.NotesUseCases
+import com.nowni.notes.domain.usecase.note.SearchNotesUseCase
 import com.nowni.notes.domain.usecase.note.UpdateNoteUseCase
 import dagger.Module
 import dagger.Provides
@@ -24,6 +25,7 @@ object UseCaseModule {
             addNote = AddNoteUseCase(repository),
             updateNote = UpdateNoteUseCase(repository),
             deleteNote = DeleteNoteUseCase(repository),
+            searchNotes = SearchNotesUseCase(repository)
         )
     }
 }

@@ -1,7 +1,10 @@
 package com.nowni.notes.presentation.home
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -19,17 +22,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.nowni.notes.core.ui.theme.NotesTheme
 import com.nowni.notes.domain.model.Note
 import com.nowni.notes.presentation.home.component.NoteCard
+import com.nowni.notes.presentation.home.component.SearchBar
 import com.nowni.notes.presentation.home.state.HomeUiState
-import com.nowni.notes.core.ui.theme.NotesTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     uiState: HomeUiState,
     onAddNote: () -> Unit = {},
-    onNoteClick: (Long) -> Unit = {}
+    onNoteClick: (Long) -> Unit = {},
+    onSearchQueryChange:(String)-> Unit ={}
 ) {
     Scaffold(topBar = {
         TopAppBar(
@@ -44,26 +49,31 @@ fun HomeScreen(
             )
         }
     }) { innerPadding ->
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .padding(horizontal = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            items(
-                items = uiState.notes,
-                key = { it.id })
-            { note ->
-                NoteCard(
-                    note = note,
-                    onclick = {
-                        onNoteClick(it.id)
-                    })
+        Column(modifier = Modifier.fillMaxSize()
+            .padding(innerPadding)
+            .padding(horizontal = 16.dp)
+        ){
+            SearchBar(
+                query= uiState.searchQuery,
+                onQueryChange = onSearchQueryChange
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            LazyColumn(
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                items(
+                    items = uiState.notes,
+                    key = { it.id })
+                { note ->
+                    NoteCard(
+                        note = note,
+                        onclick = {
+                            onNoteClick(it.id)
+                        })
+                }
             }
         }
     }
-
 }
 
 val previewNotes = listOf(
@@ -119,7 +129,8 @@ private fun HomeScreenPreview() {
         HomeScreen(
             uiState = HomeUiState(notes = previewNotes),
             onAddNote = {},
-            onNoteClick = {}
+            onNoteClick = {},
+            onSearchQueryChange = {}
         )
     }
 }

@@ -3,8 +3,10 @@ package com.nowni.notes.presentation.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nowni.notes.domain.usecase.note.GetNotesUseCase
+import com.nowni.notes.domain.usecase.note.SearchNotesUseCase
 import com.nowni.notes.presentation.home.state.HomeUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -16,10 +18,13 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val getNotesUseCase: GetNotesUseCase,
+    private val searchNotesUseCase: SearchNotesUseCase,
 //    private val deleteNoteUseCase: DeleteNoteUseCase
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
+
+    private var searchJob: Job? = null
 
     init {
         observeNotes()
@@ -42,6 +47,42 @@ class HomeViewModel @Inject constructor(
                         currentState.copy(
                             notes = notes,
                             isLoading = false
+                        )
+                    }
+                }
+        }
+    }
+
+    fun onSearchQueryChanged(
+        query: String
+    ) {
+        _uiState.update {
+            it.copy(
+                searchQuery = query
+            )
+        }
+        searchJob?.cancel()
+        searchJob = viewModelScope.launch {
+            val flow =
+                if (query.isBlank()) {
+                    getNotesUseCase()
+                }else{
+                    searchNotesUseCase(query)
+                }
+            flow.collect{notes ->
+                _uiState.update {
+                    it.copy(
+                        notes = notes
+                    )
+                }
+            }
+        }
+        viewModelScope.launch {
+            searchNotesUseCase(query)
+                .collect { notes ->
+                    _uiState.update {
+                        it.copy(
+                            notes = notes
                         )
                     }
                 }

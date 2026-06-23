@@ -31,13 +31,15 @@ fun AppNavGraph() {
     val entryProvider: (NavKey) -> NavEntry<NavKey> = entryProvider {
         entry<Home> {
 
-            val viewModel : HomeViewModel = hiltViewModel()
+            val viewModel: HomeViewModel = hiltViewModel()
             val uiState by viewModel.uiState.collectAsState()
 
             HomeScreen(uiState = uiState, onAddNote = {
                 backStack.add(Editor())
             }, onNoteClick = { noteId ->
                 backStack.add(Detail(noteId))
+            }, onSearchQueryChange = {
+                viewModel.onSearchQueryChanged(it)
             })
         }
 
@@ -63,12 +65,12 @@ fun AppNavGraph() {
                             viewModel.saveNote(editor.noteId)
                             backStack.removeLastOrNull()
                         }
+
                         else -> {
                             viewModel.onAction(action)
                         }
                     }
-                }
-            )
+                })
         }
         entry<Detail> { detail ->
 
@@ -95,8 +97,7 @@ fun AppNavGraph() {
                             backStack.removeLastOrNull()
                         }
                     }
-                }
-            )
+                })
         }
     }
 
