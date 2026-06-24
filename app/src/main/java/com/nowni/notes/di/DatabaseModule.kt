@@ -21,10 +21,11 @@ object DatabaseModule {
         @ApplicationContext context: Context
     ): NotesDatabase {
         return Room.databaseBuilder(
-            context,
-            NotesDatabase::class.java,
-            "notes_database"
-        ).build()
+                context,
+                NotesDatabase::class.java,
+                "notes_database"
+            ).fallbackToDestructiveMigration(true)
+            .build()
     }
 
     @Provides
