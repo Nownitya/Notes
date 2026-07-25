@@ -13,10 +13,12 @@ data class NoteWithTags(
 
     @Relation(
         parentColumn = "id",
-        entityColumn = "Id",
+        entityColumn = "id",
         associateBy = Junction(
-            NoteTagCrossRef::class
+            value = NoteTagCrossRef::class,
+            parentColumn = "noteId",
+            entityColumn = "tagId"
         )
     )
-    val tags: List<TagEntity>
+    var tags: List<TagEntity>
 )
